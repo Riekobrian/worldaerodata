@@ -1,0 +1,53 @@
+sources:
+  ourairports:
+    enabled: true
+    type: csv_http
+    connector: ourairports
+    mapper: ourairports_airport
+    dataset_url: "https://raw.githubusercontent.com/davidmegginson/ourairports-data/main/airports.csv"
+    freshness_sla_hours: 24
+    retry:
+      max_attempts: 3
+      backoff_seconds: 2
+
+  openflights_airlines:
+    enabled: true
+    type: csv_http
+    connector: openflights
+    mapper: openflights_airline
+    dataset_url: "https://raw.githubusercontent.com/jpatokal/openflights/master/data/airlines.dat"
+    freshness_sla_hours: 168
+    retry:
+      max_attempts: 3
+      backoff_seconds: 2
+
+  openflights_routes:
+    enabled: true
+    type: csv_http
+    connector: openflights
+    mapper: openflights_route
+    dataset_url: "https://raw.githubusercontent.com/jpatokal/openflights/master/data/routes.dat"
+    freshness_sla_hours: 168
+    retry:
+      max_attempts: 3
+      backoff_seconds: 2
+
+  mock_partner:
+    enabled: true
+    type: jsonl_file
+    connector: mocksource
+    mapper: mocksource_offer
+    file_path: "samples/mock_partner_offers.jsonl"
+    freshness_sla_hours: 1
+    retry:
+      max_attempts: 1
+      backoff_seconds: 0
+
+  opensky:
+    enabled: false
+    type: api
+    connector: opensky
+    mapper: opensky_state
+    credentials:
+      client_id: rickyybrian-api-client
+      client_secret: oSagPHnRC

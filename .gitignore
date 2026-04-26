@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+declaflights/
+.venv/
+venv/
+env/
+
+# Environment and secrets (IMPORTANT: do not commit credentials)
+.env
+.env.*
+!.env.example
+
+# Logs and temp artifacts
+*.log
+tmp/
+*.tmp
+
+# IDE and editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Database files (local dev)
+*.db
+*.sqlite
+*.sqlite3
+
+# Build outputs
+*.egg
+*.whl
+
+# Portfolio/showcase (local only - not for git)
+RESUME_SHOWCASE_REPORT.md
+DEPLOYMENT_SUMMARY.md
+DEPLOYMENT_FIXES.md
+PROJECT_STATUS_REPORT.md
+READY_TO_DEPLOY.md
+IMPLEMENTATION_COMPLETE.md
+ADD_SOURCE_CHECKLIST.md
+*.md
+!README.md
+!DEPLOYMENT_GUIDE.md
+!.github/
+
+# Sample outputs from runs
+output/
+reports/

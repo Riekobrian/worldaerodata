@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+"""Quick setup script to create .github/workflows/ci.yml"""
+
+from pathlib import Path
+
+# Create the directory structure
+repo_root = Path(__file__).parent
+workflows_dir = repo_root / '.github' / 'workflows'
+workflows_dir.mkdir(parents=True, exist_ok=True)
+
+# Write the CI workflow
+ci_yaml = workflows_dir / 'ci.yml'
+ci_yaml.write_text("""name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM UTC
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint & Format Check
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      
+      - name: Lint with ruff
+        run: ruff check flight_pipeline/
+        continue-on-error: true
+
+  test:
+    runs-on: ubuntu-latest
+    name: Run Tests
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      
+      - name: Run pytest
+        run: pytest flight_pipeline/tests/ -v --tb=short
+
+  sample-ingest:
+    runs-on: ubuntu-latest
+    name: Sample Dry-Run Ingest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+      
+      - name: Run sample dry-run ingest (validates logic)
+        run: |
+          cd flight_pipeline
+          python pipelines/run_ingestion.py --source all --dry-run --log-level INFO
+        continue-on-error: true
+        env:
+          # Dummy DB string for dry-run (not actually used)
+          FLIGHT_PIPELINE_DB_DSN: postgresql://dummy:dummy@localhost:5432/dummy
+""")
+
+print(f"✓ Created: {ci_yaml}")
+print("Ready to commit and push to GitHub!")
